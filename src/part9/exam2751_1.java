@@ -26,7 +26,7 @@ public class exam2751_1 {
             if (current % 2 == 0) {
                 parent -= 1;
             }
-            while (heap[current] > heap[parent]) {
+            while (heap[current] < heap[parent]) {
                 int temp = heap[current];
                 heap[current] = heap[parent];
                 heap[parent] = temp;
@@ -49,20 +49,26 @@ public class exam2751_1 {
                 System.out.println(heap[0]);
                 count--;
                 heap[0] = heap[count];
-                heap[count] = 0;
+                heap[count] = Integer.MAX_VALUE;
                 int current = 0;
                 int child;
-                if (heap[1] > heap[2]) {
+                if (heap[1] < heap[2]) {
                     child = 1;
                 } else {
                     child = 2;
                 }
-                while (heap[current] < heap[child]) {
+                while (heap[current] > heap[child]) {
                     int temp = heap[current];
                     heap[current] = heap[child];
                     heap[child] = temp;
                     current = child;
                     child = current * 2 + 1;
+                    if(child >= count){
+                        break;
+                    }
+                    if(heap[child] > heap[child+1]){
+                        child += 1;
+                    }
                 }
             }
         }
