@@ -11,7 +11,7 @@ public class exam2581 {
         int sum = 0;
 
         test:
-        for (int i = M; i <= N; i++) {
+        for (int i = N; i >= M; i--) {
             if (i == 1) {
                 continue test;
             }
@@ -24,9 +24,10 @@ public class exam2581 {
             sum += i;
         }
         if(min == 0){
-            min = -1;
+            System.out.println(-1);
+        }else{
+            System.out.println(sum);
+            System.out.println(min);
         }
-        System.out.println(sum);
-        System.out.println(min);
     }
 }
