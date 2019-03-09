@@ -3,101 +3,110 @@ package samsung;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class exam1244 {
-    public static char[] value, temp;
+    public static int[] input, sortedInput;
     public static String money;
-    public static int count, answer;
+    public static int caseNum, changeNum, max, index, lastIndex, size, changeIndex;
+    public static boolean flag, check;
 
-    public static void go(char[] array, int pos, int cnt) {
-        if (count == cnt) {
-            int ret = Integer.valueOf(array.toString());
-            if (ret > answer) {
-                answer = ret;
-            }
-            return;
-        }
-
-        if (pos == array.length - 2) {
-            temp = array;
-            swap(temp, pos + 1, pos);
-            go(temp, pos, cnt + 1);
-            return;
-        }
-
-        int big = -1;
-        for (int i = pos + 1; i < array.length; i++) {
-            if (array[i] - '0' > big) {
-                big = array[i] - '0';
-            }
-        }
-
-        if (array[pos] - '0' == big) {
-            go(array, pos + 1, cnt);
-        }
-
-        for (int i = pos + 1; i < array.length; i++) {
-            if (array[i] - '0' == big) {
-                temp = array;
-                swap(temp, i, pos);
-                go(temp, pos + 1, cnt + 1);
-            }
-        }
-    }
-
-    public static void swap(char[] array, int a, int b) {
-        char temp = array[a];
-        array[a] = array[b];
-        array[b] = temp;
+    public static void swap(int a, int b) {
+        int temp = input[a];
+        input[a] = input[b];
+        input[b] = temp;
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
+        caseNum = Integer.parseInt(br.readLine());
 
-        for (int i = 1; i <= T; i++) {
-            value = new char[6];
+        for (int i = 1; i <= caseNum; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
 
             money = st.nextToken();
+            input = new int[money.length()];
+            sortedInput = new int[money.length()];
+            changeNum = Integer.parseInt(st.nextToken());
+
             for (int j = 0; j < money.length(); j++) {
-                value[j] = money.charAt(j);
+                input[j] = money.charAt(j) - '0';
             }
-            count = Integer.parseInt(st.nextToken());
+            sortedInput = input.clone();
+            Arrays.sort(sortedInput);
 
-            go(value, 0, 0);
-//            for (int j = 0; j < count; j++) {
-//                // 초과
-//                if (count > money.length()) {
-//                    int temp = value[money.length() - 1];
-//                    value[money.length() - 1] = value[money.length() - 2];
-//                    value[money.length() - 2] = temp;
-//                }
-//
-//                int max = value[j];
-//                int index = j;
-//                for (int k = money.length() - 1; k > j; k--) {
-//                    if (value[k] > max) {
-//                        max = value[k];
-//                        index = k;
-//                    }
-//                }
-//
-//                if (index == j && index != money.length() - 2) {
-//
-//
-//                    int temp = value[money.length() - 1];
-//                    value[money.length() - 1] = value[money.length() - 2];
-//                    value[money.length() - 2] = temp;
-//                } else {
-//                    int temp = value[index];
-//                    value[index] = value[j];
-//                    value[j] = temp;
-//                }
-//            }
+            index = 0;
+            lastIndex = money.length() - 1;
+            size = money.length();
+            max = sortedInput[money.length() - 1];
+            flag = true;
+            check = false;
 
-            System.out.println("#" + i + " " + answer);
+            while (changeNum != 0) {
+                // 이미 정렬이 끝난지 확인
+                for (int j = 0; j < size; j++) {
+                    if (input[j] != sortedInput[size - 1 - j]) {
+                        flag = false;
+                        break;
+                    }
+                }
+
+                // 동일한 숫자의 존재 유무 확인
+                for (int j = size - 1; j > 0; j--) {
+                    if (sortedInput[j] == sortedInput[j - 1]) {
+                        check = true;
+                        break;
+                    }
+                }
+
+                // 정렬이 끝나고 동일한 숫자가 존재하는 경우
+                if (check && flag) {
+                    break;
+                }
+
+                // 길이가 2이고
+                if (money.length() == 2 || (changeNum % 2 == 0 && flag)) {
+                    swap(0, 1);
+                    break;
+                } else {
+                    if (index < size) {
+                        // 현재 값이 최대 값이 아닐 때
+                        if (input[index] != sortedInput[size - 1 - index]) {
+                            for (int j = size - 1; j > index; j--) {
+                                // 최대 값이 될 경우
+                                if (input[j] == sortedInput[size - 1 - index]) {
+                                    changeIndex = j;
+                                    swap(index, changeIndex);
+                                    // 이전 값이 동일한 경우 가장 큰 수가 되야하므로 마지막 2자리를 비교 후 결정.
+                                    if (index > 0 && index < size && input[index - 1] == input[index]) {
+                                        if (input[changeIndex] < input[changeIndex + 1]) {
+                                            swap(changeIndex, changeIndex + 1);
+                                        }
+                                    }
+
+                                    break;
+                                }
+                            }
+
+                            index++;
+                            changeNum--;
+                        } else if (input[index] == sortedInput[size - 1 - index]) {
+                            index++;
+                        }
+                    } else {
+                        swap(size - 2, size - 1);
+                        changeNum--;
+                    }
+                }
+            }
+
+            StringBuffer sb = new StringBuffer();
+            for (int j = 0; j < money.length(); j++) {
+                sb.append(input[j]);
+            }
+
+            System.out.println("#" + i + " " + sb.toString());
         }
     }
 }
