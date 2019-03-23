@@ -8,8 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class exam1967 {
-    public static int[][] tree;
-    public static int[][] value;
+    public static LinkedList<Node>[] tree;
     public static boolean[] isVisit;
     public static int[] nodeValue;
 
@@ -18,32 +17,31 @@ public class exam1967 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
 
-        tree = new int[n + 1][n + 1];
-        value = new int[n + 1][n + 1];
+        n = Integer.parseInt(br.readLine());
+        tree = new LinkedList[n + 1];
         isVisit = new boolean[n + 1];
         nodeValue = new int[n + 1];
 
-        int startNode = 0;
+        for (int i = 1; i <= n; i++) {
+            tree[i] = new LinkedList<Node>();
+        }
 
+        int startNode = 0;
         for (int i = 1; i <= n - 1; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
+
             int start = Integer.parseInt(st.nextToken());
             int destination = Integer.parseInt(st.nextToken());
             int weight = Integer.parseInt(st.nextToken());
 
-            tree[start][destination] = 1;
-            tree[destination][start] = 1;
-            value[start][destination] = weight;
-            value[destination][start] = weight;
+            tree[start].add(new Node(destination, weight));
+            tree[destination].add(new Node(start, weight));
 
-            startNode = start;
+            if (i == 1) {
+                startNode = start;
+            }
         }
-
-        queue = new LinkedList<Integer>();
-        queue.add(startNode);
-        isVisit[startNode] = true;
 
         BFS(startNode);
 
@@ -56,12 +54,12 @@ public class exam1967 {
             }
         }
 
+        for (int i = 1; i <= n; i++) {
+            isVisit[i] = false;
+            nodeValue[i] = 0;
+        }
 
-        isVisit = new boolean[n + 1];
-        nodeValue = new int[n + 1];
         queue.add(index);
-        isVisit[index] = true;
-
         BFS(index);
 
         max = 0;
@@ -72,18 +70,30 @@ public class exam1967 {
     }
 
     public static void BFS(int node) {
-//        queue.add(node);
-//        isVisit[node] = true;
+        queue = new LinkedList<Integer>();
+
+        queue.add(node);
+
         while (!queue.isEmpty()) {
             int currentNode = queue.poll();
             isVisit[currentNode] = true;
 
-            for (int i = 1; i <= n; i++) {
-                if (tree[currentNode][i] == 1 && !isVisit[i]) {
-                    queue.add(i);
-                    nodeValue[i] = nodeValue[currentNode] + value[currentNode][i];
+            for (Node nextNode : tree[currentNode]) {
+                if (!isVisit[nextNode.node]) {
+                    queue.add(nextNode.node);
+                    nodeValue[nextNode.node] = nodeValue[currentNode] + nextNode.weight;
                 }
             }
         }
+    }
+}
+
+class Node {
+    int node;
+    int weight;
+
+    Node(int node, int weight) {
+        this.node = node;
+        this.weight = weight;
     }
 }
