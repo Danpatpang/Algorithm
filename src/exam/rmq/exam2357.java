@@ -25,10 +25,8 @@ public class exam2357 {
 
         maxTree = new int[size * 2];
         minTree = new int[size * 2];
+        Arrays.fill(minTree, INF);
 
-        for (int i = 0; i < size; i++) {
-            Arrays.fill(minTree, INF);
-        }
 
         for (int i = size; i < size + N; i++) {
             int value = Integer.parseInt(br.readLine());
@@ -51,7 +49,6 @@ public class exam2357 {
         for (int i = minTree.length - 1; i > 0; i -= 2) {
             minTree[i / 2] = Math.min(minTree[i], minTree[i - 1]);
             maxTree[i / 2] = Math.max(maxTree[i], maxTree[i - 1]);
-            System.out.println();
         }
     }
 
