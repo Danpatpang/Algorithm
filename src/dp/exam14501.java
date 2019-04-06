@@ -10,22 +10,25 @@ public class exam14501 {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer st;
     int N = Integer.parseInt(br.readLine());
-    int[] dp = new int[N + 1];
+    int[] dp = new int[N + 2];
+    int[] T = new int[N + 2];
+    int[] P = new int[N + 2];
 
     for (int i = 1; i <= N; i++) {
       st = new StringTokenizer(br.readLine());
-      int T = Integer.parseInt(st.nextToken());
-      int P = Integer.parseInt(st.nextToken());
+      T[i] = Integer.parseInt(st.nextToken());
+      P[i] = Integer.parseInt(st.nextToken());
+    }
 
-      int day = i + T - 1;
-      if (day <= N) {
-        dp[i] = Math.max(dp[day] + P, dp[i]);
+    for (int i = N; i > 0; i--) {
+      int day = i + T[i];
+      if (day <= N + 1) {
+        dp[i] = Math.max(P[i] + dp[day], dp[i + 1]);
       } else {
-        dp[i] = dp[i - 1];
+        dp[i] = dp[i + 1];
       }
     }
-    for (int i = 1; i <= N; i++) {
-      System.out.println(dp[i]);
-    }
+
+    System.out.println(dp[1]);
   }
 }
