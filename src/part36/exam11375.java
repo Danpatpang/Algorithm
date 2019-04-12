@@ -3,11 +3,12 @@ package part36;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class exam11375 {
   public static int N, M;
-  public static int flow[][], backFlow[][];
+  public static int flow[][], parents[];
   public static boolean isVisit[];
   public static int result;
 
@@ -17,9 +18,9 @@ public class exam11375 {
 
     N = Integer.parseInt(st.nextToken());
     M = Integer.parseInt(st.nextToken());
-    flow = new int[N + 1][M + 1];
-    backFlow = new int[N + 1][M + 1];
-    isVisit = new boolean[M + 1];
+    flow = new int[N + M + 2][N + M + 2];
+    parents = new int[N + M + 2];
+    isVisit = new boolean[N + M + 2];
 
     // graph 연결
     for (int i = 1; i <= N; i++) {
@@ -27,34 +28,51 @@ public class exam11375 {
       int job = Integer.parseInt(st.nextToken());
 
       for (int j = 0; j < job; j++) {
-        flow[i][Integer.parseInt(st.nextToken())] = 1;
+        int current = Integer.parseInt(st.nextToken());
+        flow[i][N + current] = 1;
       }
     }
 
-    result = 0;
+    // graph S, E 초기화
     for (int i = 1; i <= N; i++) {
-      DFS(i);
+      flow[0][i] = 1;
+    }
+    for (int i = N + 1; i <= N + M; i++) {
+      flow[i][N + M + 1] = 1;
+    }
+
+    result = 0;
+    while (DFS(0)) {
+      result++;
+      backPath(N + M + 1);
+      Arrays.fill(isVisit, false);
     }
     System.out.println(result);
   }
 
-  public static void DFS(int node) {
-    for (int i = 1; i <= M; i++) {
-      if (flow[node][i] == 1) {
-        if (!isVisit[i]) {
-          result++;
-          isVisit[i] = true;
-          flow[node][i] = 0;
-          backFlow[i][node] = 1;
-          return;
-        } else {
-          for (int j = 1; j <= i; j++) {
-	          if(backFlow[i][j] == 1) {
-	          	DFS(j);
-	          }
-          }
-        }
+  public static void backPath(int n) {
+  	while(n != 0) {
+  		int child = n;
+  		n = parents[n];
+  		flow[n][child]--;
+  		flow[child][n]++;
+    }
+  }
+
+  public static boolean DFS(int start) {
+    if (start == N + M + 1) {
+      return true;
+    }
+    for (int i = 0; i <= N + M + 1; i++) {
+      if(flow[start][i] <= 0 || isVisit[i]) {
+      	continue;
+      }
+      parents[i] = start;
+      isVisit[i] = true;
+      if(DFS(i)) {
+      	return true;
       }
     }
+    return false;
   }
 }
