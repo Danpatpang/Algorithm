@@ -28,7 +28,14 @@ public class exam12781 {
 	}
 
 	public static int CCW(Point p1, Point p2, Point p3) {
-		return ((p2.x - p1.x) * (p3.y - p1.y)) - ((p3.x - p1.x) * (p2.y - p1.y));
+		long temp = ((p2.x - p1.x) * (p3.y - p1.y)) - ((p3.x - p1.x) * (p2.y - p1.y));
+		if(temp > 0) {
+			return 1;
+		} else if (temp == 0) {
+			return 0;
+		} else {
+			return -1;
+		}
 	}
 
 	public static boolean Check(int v1, int v2) {
