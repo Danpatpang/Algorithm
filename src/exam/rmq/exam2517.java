@@ -6,22 +6,21 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class exam2517 {
-	static int[] t;
+	static int[] tree;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
 		Runner[] runners = new Runner[N];
-		t = new int[N + 1];
+		tree = new int[N + 1];
 
 		for (int i = 0; i < N; i++) {
-			runners[i] = new Runner(i, Integer.parseInt(br.readLine()));
+			runners[i] = new Runner(i + 1, Integer.parseInt(br.readLine()));
 		}
 
-		Arrays.sort(runners, (o1, o2) -> o1.cost - o2.cost);
-
+		Arrays.sort(runners, (o1, o2) -> o1.ability - o2.ability);
 		for (int i = 0; i < N; i++) {
-			runners[i].cost = i + 1;
+			runners[i].ability = i + 1;
 		}
 
 		Arrays.sort(runners, (o1, o2) -> o1.order - o2.order);
@@ -29,23 +28,23 @@ public class exam2517 {
 		int totalRunner = 0;
 		for (int i = 0; i < N; i++) {
 			totalRunner++;
-			System.out.println(totalRunner - sum(runners[i].cost - 1));
-			update(runners[i].cost);
+			System.out.println(totalRunner - sum(runners[i].ability - 1));
+			update(runners[i].ability);
 		}
 	}
 
 	static int sum(int i) {
-		int total = 0;
+		int result = 0;
 		while (i > 0) {
-			total += t[i];
+			result += tree[i];
 			i -= (i & -i);
 		}
-		return total;
+		return result;
 	}
 
 	static void update(int i) {
-		while (i < t.length) {
-			t[i] += 1;
+		while (i < tree.length) {
+			tree[i] += 1;
 			i += (i & -i);
 		}
 	}
@@ -53,10 +52,10 @@ public class exam2517 {
 
 class Runner {
 	int order;
-	int cost;
+	int ability;
 
-	Runner(int order, int cost) {
+	Runner(int order, int ability) {
 		this.order = order;
-		this.cost = cost;
+		this.ability = ability;
 	}
 }
