@@ -13,13 +13,16 @@ public class exam2133 {
 		if (N % 2 == 1) {
 			System.out.println(0);
 		} else {
-			dp[1] = 1;
-			dp[2] = 2;
-			for (int i = 3; i <= N; i++) {
-				dp[i] = dp[i - 1] + dp[i - 2];
+			dp[0] = 1;
+			dp[2] = 3;
+			for (int i = 4; i <= N; i += 2) {
+				for (int j = 2; j <= i; j += 2) {
+					int now = (j == 2) ? 3 : 2;
+					dp[i] += now * dp[i - j];
+				}
 			}
 
-			System.out.println((dp[N] * 2) - 1);
+			System.out.println(dp[N]);
 		}
 	}
 }
