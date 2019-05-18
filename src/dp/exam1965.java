@@ -19,6 +19,7 @@ public class exam1965 {
 
 		int result = 0;
 		for (int i = 1; i <= n; i++) {
+			dp[i] =1;
 			for (int j = 1; j <= i; j++) {
 				if(value[i] > value[j]) {
 					dp[i] = Math.max(dp[i], dp[j] + 1);
