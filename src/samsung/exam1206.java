@@ -6,30 +6,32 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class exam1206 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		for (int i = 1; i <= 10; i++) {
+			StringBuffer sb = new StringBuffer("#" + i + " ");
 
-        for (int t = 0; t < 10; t++) {
-            int length = Integer.parseInt(br.readLine());
-            int[] height = new int[length + 4];
+			int N = Integer.parseInt(br.readLine());
+			StringTokenizer st = new StringTokenizer(br.readLine());
 
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for (int i = 2; i < length + 2; i++) {
-                height[i] = Integer.parseInt(st.nextToken());
-            }
+			int[] height = new int[N + 4];
+			for (int j = 2; j <= N + 1; j++) {
+				height[j] = Integer.parseInt(st.nextToken());
+			}
 
-            int result = 0;
-            int temp = 0;
+			int result = 0;
+			for (int j = 2; j <= N + 1; j++) {
+				int left = Math.max(height[j - 2], height[j - 1]);
+				int right = Math.max(height[j + 1], height[j + 2]);
+				int limit = Math.max(left, right);
 
-            for (int i = 2; i < length + 2; i++) {
-                temp = height[i] - Math.max(Math.max(height[i - 1], height[i - 2]),
-                        Math.max(height[i + 1], height[i + 2]));
-                if (temp > 0) {
-                    result += temp;
-                }
-            }
+				if(height[j] > limit) {
+					result += (height[j] - limit);
+				}
+			}
 
-            System.out.println("#" + (t + 1) + " " + result);
-        }
-    }
+			sb.append(result);
+			System.out.println(sb.toString());
+		}
+	}
 }
